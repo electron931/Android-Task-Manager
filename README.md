@@ -1,8 +1,8 @@
 #WingPad
 
 ![David](https://david-dm.org/yandex-shri-minsk-2014/team-1.png)
-[![Issue Stats](http://issuestats.com/github/yandex-shri-minsk-2014/team-1/badge/pr)](http://issuestats.com/github/yandex-shri-minsk-2014/team-2)
-[![Issue Stats](http://issuestats.com/github/yandex-shri-minsk-2014/team-1/badge/issue)](http://issuestats.com/github/yandex-shri-minsk-2014/team-2)
+[![Issue Stats](http://issuestats.com/github/yandex-shri-minsk-2014/team-1/badge/pr)](http://issuestats.com/github/yandex-shri-minsk-2014/team-1)
+[![Issue Stats](http://issuestats.com/github/yandex-shri-minsk-2014/team-1/badge/issue)](http://issuestats.com/github/yandex-shri-minsk-2014/team-1)
 
 Collaborative real-time code editor
 

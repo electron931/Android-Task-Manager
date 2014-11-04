@@ -18,16 +18,21 @@ Navigate to the app folder and type following commands:
 ## Dependencies:
 
 Text editor implemented in JavaScript for the browser:
+
 [Codemirror](http://codemirror.net/)
 
 Operational Transform library:
+
 [ShareJS](http://sharejs.org/)
 
 Websocket library:
+
 [Websocket](https://github.com/einaros/ws)
 
 ## Project structure:
 
 `blocks/` -- frontend. Client code (html, css, js) should be placed into appropriate blocks
+
 `config/` -- basic app config (currently - port numbers)
+
 `server/` -- backend. Entity descriptions (user, document) and request processing logic (e.g. operational transformation).

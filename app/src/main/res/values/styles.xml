@@ -5,4 +5,23 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="MemoryUsageArcProgress">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#333</item>
+        <item name="android:textSize">32dp</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:background">#555</item>
+        <item name="arc_bottom_text_size">20dp</item>
+        <item name="arc_unfinished_color">#A4CA39</item>
+        <item name="arc_finished_color">#A01749</item>
+    </style>
+
+    <style name="SystemTitleTextView">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">#33b5e5</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
+
 </resources>

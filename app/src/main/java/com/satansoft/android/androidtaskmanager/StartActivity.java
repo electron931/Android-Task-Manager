@@ -6,7 +6,7 @@ public class StartActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new StartFragment();
+        return new CPUInfoFragment();
     }
 
 }

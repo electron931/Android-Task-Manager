@@ -2,14 +2,19 @@ package com.satansoft.android.androidtaskmanager;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+
+import com.github.lzyzsd.circleprogress.ArcProgress;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,90 +22,112 @@ import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 
-public class StartFragment extends Fragment {
+public class CPUInfoFragment extends Fragment {
 
     private static final String TAG = "StartFragment";
+    private static final int ARC_PROGRESS_SIZE = 300;
 
-    private TextView mNumberOfCpuTextView;
-    private TextView mCpuUsageTextView;
-    private TextView mMemoryUsageTextView;
+    private int mCoresNumber;
+
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mCoresNumber = getNumberOfCores();
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View viewRoot = inflater.inflate(R.layout.fragment_system_info, container, false);
+        LinearLayout cpuInsertionPointLayout = new LinearLayout(getActivity());
+        cpuInsertionPointLayout.setOrientation(LinearLayout.VERTICAL);
+        cpuInsertionPointLayout.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        mNumberOfCpuTextView = (TextView) viewRoot.findViewById(R.id.number_of_cpu);
 
-        int coreNumbers = getNumberOfCores();
-        mNumberOfCpuTextView.setText("Cores number: " + coreNumbers);
+        List<ArcProgress> arcProgressList = new ArrayList<ArcProgress>(mCoresNumber);
 
-        mCpuUsageTextView = (TextView) viewRoot.findViewById(R.id.cpu_usage);
-        StringBuilder cpuUsage = new StringBuilder();
-        for (int i = 0; i < coreNumbers; i++) {
-            cpuUsage.append("Cpu").append(i).append(": ").append(readCore(i)).append("; ");
+        for (int i = 0; i < mCoresNumber; i++) {
+            int coreUsage = Math.round(getCoreUsage(i) * 100);
+            ArcProgress arcProgress = (ArcProgress) getActivity()
+                    .getLayoutInflater()
+                    .inflate(R.layout.arcprogress_template, null);
+            arcProgress.setBottomText(getString(R.string.cpu_number, i + 1));
+            arcProgress.setProgress(coreUsage);
+
+            arcProgressList.add(arcProgress);
         }
-        mCpuUsageTextView.setText(cpuUsage.toString());
 
+        fillLinearLayout(cpuInsertionPointLayout, arcProgressList);
 
-        mMemoryUsageTextView = (TextView) viewRoot.findViewById(R.id.memory_usage);
-        long totalMemory = getTotalMemory() / 1024;
-        long availableMemory = getAvailableMemory() / 1024;
-        long memoryUsage = totalMemory - availableMemory;
-        mMemoryUsageTextView.setText("Total Memory: "
-                + totalMemory + " MB; Available Memory: " + availableMemory + " MB; " +
-                "Memory Usage: " + memoryUsage + " MB;");
-
-
-        return viewRoot;
+        return cpuInsertionPointLayout;
     }
 
 
 
-    private long getAvailableMemory() {
-        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-        ActivityManager activityManager = (ActivityManager)
-                getActivity().getSystemService(Activity.ACTIVITY_SERVICE);
-
-        activityManager.getMemoryInfo(memoryInfo);
-        return memoryInfo.availMem / 1024L;     //bytes to kB
-    }
 
 
+    private void fillLinearLayout(LinearLayout linearLayout, List<ArcProgress> collection) {
 
-    private long getTotalMemory() {
-        String str1 = "/proc/meminfo";
-        String str2;
-        String[] arrayOfString;
-        long totalMemory = 0;
-        try {
-            FileReader localFileReader = new FileReader(str1);
-            BufferedReader localBufferedReader = new BufferedReader(localFileReader, 8192);
-            str2 = localBufferedReader.readLine();              //meminfo
-            arrayOfString = str2.split("\\s+");
-            for (String num : arrayOfString) {
-                Log.i(str2, num + "\t");
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        int maxWidth = display.getWidth() - 10;
+
+        ViewGroup.LayoutParams arcProgressLayoutParams =
+                new ViewGroup.LayoutParams(ARC_PROGRESS_SIZE, ARC_PROGRESS_SIZE);
+
+
+        if (collection.size() > 0) {
+            LinearLayout insideLinearLayout = new LinearLayout(getActivity());
+            insideLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            insideLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            insideLinearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+
+
+            int widthSoFar = 0;
+
+            for (ArcProgress item : collection) {
+                widthSoFar += ARC_PROGRESS_SIZE;
+
+                if (widthSoFar >= maxWidth) {
+                    linearLayout.addView(insideLinearLayout);
+
+                    insideLinearLayout = new LinearLayout(getActivity());
+                    insideLinearLayout.setLayoutParams(new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+                    insideLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    insideLinearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+
+                    insideLinearLayout.addView(item, arcProgressLayoutParams);
+                    widthSoFar = 0;
+                } else {
+                    insideLinearLayout.addView(item, arcProgressLayoutParams);
+                }
             }
-            //total Memory
-            totalMemory = Integer.valueOf(arrayOfString[1]);            //kB
-            localBufferedReader.close();
-            return totalMemory;
-        }
-        catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-            return 0;
+
+            linearLayout.addView(insideLinearLayout);
         }
     }
+
 
 
 
     //http://stackoverflow.com/questions/22405403/android-cpu-cores-reported-in-proc-stat
     //for multi core value
-    private float readCore(int i) {
+    private float getCoreUsage(int i) {
         /*
         * how to calculate multicore
         * this function reads the bytes from a logging file in the android system (/proc/stat for cpu values)
@@ -136,7 +163,9 @@ public class StartFragment extends Fragment {
                     //4 cores, and I'n my app, I run this all in a second. So, I need it a bit shorter
                     Thread.sleep(200);
                 }
-                catch (Exception e) {}
+                catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                }
 
                 reader.seek(0);
                 //skip to the line we need
@@ -195,10 +224,7 @@ public class StartFragment extends Fragment {
             @Override
             public boolean accept(File pathname) {
                 //Check if filename is "cpu", followed by a single digit number
-                if(Pattern.matches("cpu[0-9]+", pathname.getName())) {
-                    return true;
-                }
-                return false;
+                return Pattern.matches("cpu[0-9]+", pathname.getName());
             }
         }
 
@@ -214,5 +240,27 @@ public class StartFragment extends Fragment {
             //Default to return 1 core
             return 1;
         }
+    }
+
+
+
+    private String getCPUInfo() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("abi: ").append(Build.CPU_ABI).append("\n");
+        if (new File("/proc/cpuinfo").exists()) {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(new File("/proc/cpuinfo")));
+                String aLine;
+                while ((aLine = br.readLine()) != null) {
+                    stringBuilder.append(aLine).append("\n");
+                }
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return stringBuilder.toString();
     }
 }

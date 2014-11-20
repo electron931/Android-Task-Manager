@@ -4,5 +4,10 @@
     <string name="app_name">Android Task Manager</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="cpu_info">CPU INFO</string>
+
+    <string name="cpu_number">CPU%1$s</string>
+    <string name="extended_cpu_info">Extended CPU Info</string>
+    <string name="memory_info">Memory Info</string>
 
 </resources>

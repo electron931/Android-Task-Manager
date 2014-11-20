@@ -32,9 +32,10 @@ public class SystemInfoFragment extends Fragment {
     private long mAvailableMemory;
     private long mMemoryUsage;
 
+    private volatile boolean mIsActivityActive;
+
     private TextView mCpuExtendedInfoToggleTextView;
     private TextView mCpuExtendedInfoTextView;
-    private TextView mMemoryUsageTextView;
     private ArcProgress mMemoryUsageArcProgress;
 
 
@@ -42,9 +43,7 @@ public class SystemInfoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mTotalMemory = getTotalMemory();
-        mAvailableMemory = getAvailableMemory();
-        mMemoryUsage = mTotalMemory - mAvailableMemory;
+        updateMemoryInfo();
     }
 
     @Override
@@ -52,6 +51,7 @@ public class SystemInfoFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_system_info, container, false);
+
 
         mCpuExtendedInfoTextView = (TextView)
                 rootView.findViewById(R.id.cpu_extended_info);
@@ -96,6 +96,52 @@ public class SystemInfoFragment extends Fragment {
 
         activityManager.getMemoryInfo(memoryInfo);
         return memoryInfo.availMem / 1024L;     //bytes to kB
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mIsActivityActive = true;
+
+        // Start lengthy operation in a background thread
+        new Thread(new Runnable() {
+            public void run() {
+                while (mIsActivityActive) {
+
+                    updateMemoryInfo();
+
+                    // Update the progress bar
+                    mMemoryUsageArcProgress.post(new Runnable() {
+                        public void run() {
+                            int memoryUsageInPercents = (int) ( ( (float) mMemoryUsage
+                                    / (float) mTotalMemory) * 100 );
+
+                            mMemoryUsageArcProgress.setProgress(memoryUsageInPercents);
+                            mMemoryUsageArcProgress.setBottomText(mMemoryUsage / 1024 + "MB / " + mTotalMemory / 1024 + "MB");
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mIsActivityActive = false;
+    }
+
+
+
+    private void updateMemoryInfo() {
+        mTotalMemory = getTotalMemory();
+        mAvailableMemory = getAvailableMemory();
+        mMemoryUsage = mTotalMemory - mAvailableMemory;
     }
 
 

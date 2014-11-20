@@ -1,8 +1,5 @@
 package com.satansoft.android.androidtaskmanager;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,10 +13,8 @@ import android.widget.LinearLayout;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -32,7 +27,12 @@ public class CPUInfoFragment extends Fragment {
     private static final String TAG = "StartFragment";
     private static final int ARC_PROGRESS_SIZE = 300;
 
+    private volatile boolean mIsActivityActive;
+
     private int mCoresNumber;
+
+    private List<ArcProgress> mArcProgressList;
+
 
 
 
@@ -56,7 +56,7 @@ public class CPUInfoFragment extends Fragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
 
-        List<ArcProgress> arcProgressList = new ArrayList<ArcProgress>(mCoresNumber);
+        mArcProgressList = new ArrayList<ArcProgress>(mCoresNumber);
 
         for (int i = 0; i < mCoresNumber; i++) {
             int coreUsage = Math.round(getCoreUsage(i) * 100);
@@ -66,15 +66,63 @@ public class CPUInfoFragment extends Fragment {
             arcProgress.setBottomText(getString(R.string.cpu_number, i + 1));
             arcProgress.setProgress(coreUsage);
 
-            arcProgressList.add(arcProgress);
+            mArcProgressList.add(arcProgress);
         }
 
-        fillLinearLayout(cpuInsertionPointLayout, arcProgressList);
+        fillLinearLayout(cpuInsertionPointLayout, mArcProgressList);
 
         return cpuInsertionPointLayout;
     }
 
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mIsActivityActive = true;
+
+        for (int i = 0; i < mArcProgressList.size(); i++) {
+            startUpdatingArcProgress(i);
+        }
+
+    }
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mIsActivityActive = false;
+    }
+
+
+
+    private void startUpdatingArcProgress(final int i) {
+        // Start lengthy operation in a background thread
+        new Thread(new Runnable() {
+            public void run() {
+                while (mIsActivityActive) {
+
+                    mArcProgressList.get(i).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            int coreUsage = Math.round(getCoreUsage(i) * 100);
+                            mArcProgressList.get(i).setProgress(coreUsage);
+                        }
+                    });
+
+                    try {
+                        Thread.sleep(4000);
+                    }
+                    catch (InterruptedException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+
+                }
+            }
+        }).start();
+    }
 
 
 
@@ -242,25 +290,4 @@ public class CPUInfoFragment extends Fragment {
         }
     }
 
-
-
-    private String getCPUInfo() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("abi: ").append(Build.CPU_ABI).append("\n");
-        if (new File("/proc/cpuinfo").exists()) {
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(new File("/proc/cpuinfo")));
-                String aLine;
-                while ((aLine = br.readLine()) != null) {
-                    stringBuilder.append(aLine).append("\n");
-                }
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return stringBuilder.toString();
-    }
 }

@@ -19,6 +19,8 @@
             android:text="@string/cpu_info"
             style="@style/SystemTitleTextView"/>
 
+
+
         <fragment
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

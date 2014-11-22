@@ -20,6 +20,8 @@ public class TaskListFragment extends ListFragment {
 
     private TextView mTaskTopActivityTextView;
 
+    private List<ActivityManager.RunningTaskInfo> mRunningTasks;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,12 +29,9 @@ public class TaskListFragment extends ListFragment {
 
         ActivityManager activityManager = (ActivityManager) getActivity()
                 .getSystemService(Activity.ACTIVITY_SERVICE);
+        mRunningTasks = activityManager.getRunningTasks(MAX_NUMBER_OF_TASKS);
 
-
-        List<ActivityManager.RunningTaskInfo> runningTasks
-                = activityManager.getRunningTasks(MAX_NUMBER_OF_TASKS);
-
-        setListAdapter(new MyAdapter(runningTasks));
+        setListAdapter(new MyAdapter(mRunningTasks));
     }
 
 
@@ -40,6 +39,11 @@ public class TaskListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        ActivityManager activityManager = (ActivityManager) getActivity()
+                .getSystemService(Activity.ACTIVITY_SERVICE);
+        mRunningTasks = activityManager.getRunningTasks(MAX_NUMBER_OF_TASKS);
+
         ((MyAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
@@ -75,6 +79,8 @@ public class TaskListFragment extends ListFragment {
             }
 
             ActivityManager.RunningTaskInfo runningTaskInfo = getItem(position);
+
+
 
             mTaskTopActivityTextView = (TextView) convertView
                     .findViewById(R.id.task_top_activity_name);

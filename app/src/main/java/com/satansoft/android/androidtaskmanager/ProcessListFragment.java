@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 public class ProcessListFragment extends ListFragment {
@@ -24,29 +26,19 @@ public class ProcessListFragment extends ListFragment {
     private TextView mProcessTotalSharedDirtyTextView;
     private TextView mProcessTotalPSSTextView;
 
-    private Debug.MemoryInfo[] mMemoryInfos;
+    List<ActivityManager.RunningAppProcessInfo> mRunningProcesses;
+
+    private List<Debug.MemoryInfo> mMemoryInfos;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
-        ActivityManager activityManager = (ActivityManager) getActivity()
-                .getSystemService(Activity.ACTIVITY_SERVICE);
+        updateProcessesInfo();
 
-
-        List<ActivityManager.RunningAppProcessInfo> runningProcesses
-                = activityManager.getRunningAppProcesses();
-
-        int[] pids = new int [runningProcesses.size()];
-
-        for (int i = 0; i < runningProcesses.size(); i++) {
-            pids[i] = runningProcesses.get(i).pid;
-        }
-
-        mMemoryInfos = activityManager.getProcessMemoryInfo(pids);
-
-        setListAdapter(new MyAdapter(runningProcesses));
+        setListAdapter(new MyAdapter(mRunningProcesses));
     }
 
 
@@ -54,20 +46,28 @@ public class ProcessListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        updateProcessesInfo();
+
         ((MyAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
 
 
-    @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        /*ActivityManager.RunningAppProcessInfo runningProcessInfo
-                = ((MyAdapter) listView.getAdapter()).getItem(position);
+    private void updateProcessesInfo() {
         ActivityManager activityManager = (ActivityManager) getActivity()
                 .getSystemService(Activity.ACTIVITY_SERVICE);
-        activityManager.killBackgroundProcesses(runningProcessInfo.processName);
 
-        ((MyAdapter) getListAdapter()).notifyDataSetChanged();*/
+
+        mRunningProcesses = activityManager.getRunningAppProcesses();
+
+        int[] pids = new int [mRunningProcesses.size()];
+
+        for (int i = 0; i < mRunningProcesses.size(); i++) {
+            pids[i] = mRunningProcesses.get(i).pid;
+        }
+
+        mMemoryInfos = Arrays.asList(activityManager.getProcessMemoryInfo(pids));
     }
 
 
@@ -106,11 +106,11 @@ public class ProcessListFragment extends ListFragment {
                     .findViewById(R.id.process_memory_total_pss);
 
             mProcessTotalPrivateDirtyTextView.setText("totalPrivateDirty: "
-                    + mMemoryInfos[position].getTotalPrivateDirty() + " kB");
+                    + mMemoryInfos.get(position).getTotalPrivateDirty() /1024 + " MB");
             mProcessTotalSharedDirtyTextView.setText("totalSharedDirty: "
-                    + mMemoryInfos[position].getTotalSharedDirty() + " kB");
+                    + mMemoryInfos.get(position).getTotalSharedDirty() / 1024 + " MB");
             mProcessTotalPSSTextView.setText("totalPSS: "
-                    + mMemoryInfos[position].getTotalPss() + " kB");
+                    + mMemoryInfos.get(position).getTotalPss() / 1024 + " MB");
 
 
             return convertView;

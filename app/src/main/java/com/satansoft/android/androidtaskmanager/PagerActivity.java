@@ -19,12 +19,14 @@ public class PagerActivity extends FragmentActivity {
 
     private String[] mFragments = { "MemoryInfoFragment",
                                     "HardwareInfoFragment",
-                                    "ProcessListFragment" };
+                                    "ProcessListFragment",
+                                    "AppsListFragment"};
 
 
     private static final String[] titles = { "Memory Info",
                                              "Hardware Info",
-                                             "Running Processes" };
+                                             "Running Processes",
+                                             "Installed Apps"};
 
     // When requested, this adapter returns a DemoObjectFragment,
     // representing an object in the collection.

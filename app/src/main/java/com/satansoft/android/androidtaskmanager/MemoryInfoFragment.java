@@ -2,6 +2,7 @@ package com.satansoft.android.androidtaskmanager;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -11,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
@@ -19,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 
 public class MemoryInfoFragment extends Fragment {
@@ -43,6 +47,8 @@ public class MemoryInfoFragment extends Fragment {
 
     private ArcProgress mMemoryUsageArcProgress;
     private ArcProgress mInternalMemoryUsageArcProgress;
+
+    private Button mClearCacheButton;
 
 
     @Override
@@ -70,16 +76,18 @@ public class MemoryInfoFragment extends Fragment {
         mMemoryUsageArcProgress.setBottomText(
                 mMemoryUsage / 1024 + "MB / " + mTotalMemory / 1024 + "MB");
 
-
         mInternalMemoryUsageArcProgress = (ArcProgress) rootView
                 .findViewById(R.id.internal_memory_usage_arc_progress);
-        int internalMemoryUsageInPercents = (int) ( ( (float) mInternalMemoryUsageSize
-                / (float) mTotalInternalMemorySize) * 100 );
-        mInternalMemoryUsageArcProgress.setProgress(internalMemoryUsageInPercents);
-        mInternalMemoryUsageArcProgress.setArcAngle(250);
-        mInternalMemoryUsageArcProgress.setBottomText(
-                String.format("%.2f", (float) (mInternalMemoryUsageSize) / 1073741824L)  + "GB / "+
-                String.format("%.2f", (float) (mTotalInternalMemorySize) / 1073741824L) + "GB");
+        updateInternalMemoryArcProgress();
+
+
+        mClearCacheButton = (Button) rootView.findViewById(R.id.clear_cache_button);
+        mClearCacheButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearCache();
+            }
+        });
 
 
         return rootView;
@@ -196,6 +204,49 @@ public class MemoryInfoFragment extends Fragment {
         long blockSize = stat.getBlockSize();
         long totalBlocks = stat.getBlockCount();
         return totalBlocks * blockSize;
+    }
+
+
+
+    private void clearCache() {
+        PackageManager pm = getActivity().getPackageManager();
+        // Get all methods on the PackageManager
+        Method[] methods = pm.getClass().getDeclaredMethods();
+        for (Method m : methods) {
+            if (m.getName().equals("freeStorage")) {
+                // Found the method I want to use
+                try {
+                    long desiredFreeStorage = 8 * 1024 * 1024 * 1024; // Request for 8GB of free space
+                    m.invoke(pm, Long.MAX_VALUE , null);
+                } catch (Exception e) {
+                    // Method invocation failed. Could be a permission problem
+                    Log.e(TAG, e.getMessage());
+                }
+                break;
+            }
+        }
+
+        long oldAvailableInternalMemorySize = mAvailableInternalMemorySize;
+
+        updateInternalMemoryInfo();
+
+        Toast.makeText(getActivity(), getString(R.string.cache_deleted_toast) + ": " +
+                (mAvailableInternalMemorySize - oldAvailableInternalMemorySize) / 1048576 + " MB",
+                Toast.LENGTH_SHORT).show();
+
+        updateInternalMemoryArcProgress();
+    }
+
+
+
+    private void updateInternalMemoryArcProgress() {
+        int internalMemoryUsageInPercents = (int) ( ( (float) mInternalMemoryUsageSize
+                / (float) mTotalInternalMemorySize) * 100 );
+        mInternalMemoryUsageArcProgress.setProgress(internalMemoryUsageInPercents);
+        mInternalMemoryUsageArcProgress.setArcAngle(250);
+        mInternalMemoryUsageArcProgress.setBottomText(
+                String.format("%.2f", (float) (mInternalMemoryUsageSize) / 1073741824L)  + "GB / "+
+                        String.format("%.2f", (float) (mTotalInternalMemorySize) / 1073741824L) + "GB");
     }
 
 }

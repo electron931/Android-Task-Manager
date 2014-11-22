@@ -3,6 +3,7 @@ package com.satansoft.android.androidtaskmanager;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,11 @@ public class ProcessListFragment extends ListFragment {
 
     private TextView mProcessNameTextView;
     private TextView mProcessIdTextView;
+    private TextView mProcessTotalPrivateDirtyTextView;
+    private TextView mProcessTotalSharedDirtyTextView;
+    private TextView mProcessTotalPSSTextView;
+
+    private Debug.MemoryInfo[] mMemoryInfos;
 
 
     @Override
@@ -31,6 +37,14 @@ public class ProcessListFragment extends ListFragment {
 
         List<ActivityManager.RunningAppProcessInfo> runningProcesses
                 = activityManager.getRunningAppProcesses();
+
+        int[] pids = new int [runningProcesses.size()];
+
+        for (int i = 0; i < runningProcesses.size(); i++) {
+            pids[i] = runningProcesses.get(i).pid;
+        }
+
+        mMemoryInfos = activityManager.getProcessMemoryInfo(pids);
 
         setListAdapter(new MyAdapter(runningProcesses));
     }
@@ -83,6 +97,20 @@ public class ProcessListFragment extends ListFragment {
             mProcessIdTextView = (TextView) convertView
                     .findViewById(R.id.process_id);
             mProcessIdTextView.setText("pid: " + runningProcessInfo.pid);
+
+            mProcessTotalPrivateDirtyTextView = (TextView) convertView
+                    .findViewById(R.id.process_memory_total_private_dirty);
+            mProcessTotalSharedDirtyTextView = (TextView) convertView
+                    .findViewById(R.id.process_memory_total_shared_dirty);
+            mProcessTotalPSSTextView = (TextView) convertView
+                    .findViewById(R.id.process_memory_total_pss);
+
+            mProcessTotalPrivateDirtyTextView.setText("totalPrivateDirty: "
+                    + mMemoryInfos[position].getTotalPrivateDirty() + " kB");
+            mProcessTotalSharedDirtyTextView.setText("totalSharedDirty: "
+                    + mMemoryInfos[position].getTotalSharedDirty() + " kB");
+            mProcessTotalPSSTextView.setText("totalPSS: "
+                    + mMemoryInfos[position].getTotalPss() + " kB");
 
 
             return convertView;

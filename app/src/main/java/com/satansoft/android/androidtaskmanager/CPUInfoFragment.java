@@ -1,5 +1,6 @@
 package com.satansoft.android.androidtaskmanager;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,7 +33,6 @@ public class CPUInfoFragment extends Fragment {
     private int mCoresNumber;
 
     private List<ArcProgress> mArcProgressList;
-
 
 
 
@@ -70,6 +70,7 @@ public class CPUInfoFragment extends Fragment {
         }
 
         fillLinearLayout(cpuInsertionPointLayout, mArcProgressList);
+
 
         return cpuInsertionPointLayout;
     }

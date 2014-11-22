@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+
+        <!--<TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cpu_info"
+            style="@style/SystemTitleTextView"/>-->
+
+
+        <!--<fragment
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.satansoft.android.androidtaskmanager.CPUInfoFragment"/>-->
+
+
+        <!--<TextView android:id="@+id/cpu_extended_info_toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="#33b5e5"
+            android:textSize="18sp"
+            android:text="@string/extended_cpu_info"/>-->
+
+        <!--<TextView android:id="@+id/cpu_extended_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:padding="5dp"
+            android:background="#FBFBFB"/>-->
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ram_info"
+            style="@style/SystemTitleTextView"/>
+
+
+        <!-- https://github.com/lzyzsd/CircleProgress -->
+        <com.github.lzyzsd.circleprogress.ArcProgress
+            android:id="@+id/memory_usage_arc_progress"
+            style="@style/MemoryUsageArcProgress"
+            android:background="@android:color/transparent"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            custom:arc_text_size="48sp"
+            custom:arc_suffix_text_size="32sp"
+            custom:arc_stroke_width="6dp"
+            android:layout_gravity="center_horizontal"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/internal_storage_info"
+            style="@style/SystemTitleTextView"/>
+
+
+        <com.github.lzyzsd.circleprogress.ArcProgress
+            android:id="@+id/internal_memory_usage_arc_progress"
+            style="@style/MemoryUsageArcProgress"
+            android:background="@android:color/transparent"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            custom:arc_text_size="48sp"
+            custom:arc_suffix_text_size="32sp"
+            custom:arc_stroke_width="6dp"
+            android:layout_gravity="center_horizontal"/>
+
+
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="10px"
+            android:paddingBottom="5px"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:src="@android:drawable/divider_horizontal_bright" />
+
+
+        <Button android:id="@+id/clear_memory_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_memory"
+            style="@style/AccelerateButton"/>
+
+        <Button android:id="@+id/clear_cache_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/delete_cache"
+                style="@style/AccelerateButton"/>
+
+
+
+    </LinearLayout>
+
+
+</ScrollView>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
+              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:padding="12dp">
@@ -8,16 +8,30 @@
     <TextView android:id="@+id/process_id"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:textSize="16sp"
-              android:text="123"
-              android:layout_marginBottom="8dp"/>
+              android:textSize="16sp"/>
 
     <TextView android:id="@+id/process_name"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:textSize="16sp"
-              android:text="123"
-              android:layout_marginLeft="12dp"
-              android:layout_marginBottom="8dp"/>
+              android:layout_marginLeft="12dp"/>
+
+    <TextView android:id="@+id/process_memory_total_private_dirty"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="16sp"
+              android:layout_marginLeft="12dp"/>
+
+    <TextView android:id="@+id/process_memory_total_shared_dirty"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="16sp"
+              android:layout_marginLeft="12dp"/>
+
+    <TextView android:id="@+id/process_memory_total_pss"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="16sp"
+              android:layout_marginLeft="12dp"/>
 
 </LinearLayout>

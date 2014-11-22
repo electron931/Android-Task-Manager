@@ -4,10 +4,17 @@
     <string name="app_name">Android Task Manager</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="cpu_info">CPU INFO</string>
+    <string name="cpu_info"><u>Processor</u></string>
 
     <string name="cpu_number">CPU%1$s</string>
     <string name="extended_cpu_info">Extended CPU Info</string>
-    <string name="memory_info">Memory Info</string>
+    <string name="ram_info">RAM</string>
+    <string name="internal_storage_info">Internal Storage</string>
+    <string name="clear_memory">Release RAM</string>
+    <string name="delete_cache">Delete Cache</string>
+    <string name="sensors_info"><u>Sensors</u></string>
+    <string name="camera_info"><u>Camera</u></string>
+    <string name="general_info"><u>System</u></string>
+    <string name="display_info"><u>Display</u></string>
 
 </resources>

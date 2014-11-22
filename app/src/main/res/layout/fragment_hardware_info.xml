@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+
+        <TextView android:id="@+id/general_info_toggle"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/general_info"
+                  style="@style/SystemTitleTextView"/>
+
+
+        <TextView android:id="@+id/general_info"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:visibility="gone"
+                  android:padding="5dp"
+                  android:background="#FBFBFB"
+                  style="@style/HardwareInfoTextView"/>
+
+
+        <TextView android:id="@+id/display_info_toggle"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/display_info"
+                  style="@style/SystemTitleTextView"/>
+
+
+        <TextView android:id="@+id/display_info"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:visibility="gone"
+                  android:padding="5dp"
+                  android:background="#FBFBFB"
+                  style="@style/HardwareInfoTextView"/>
+
+
+        <TextView android:id="@+id/cpu_info_toggle"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/cpu_info"
+                  style="@style/SystemTitleTextView"/>
+
+
+        <TextView android:id="@+id/cpu_info"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:visibility="gone"
+                  android:padding="5dp"
+                  android:background="#FBFBFB"
+                  style="@style/HardwareInfoTextView"/>
+
+
+        <TextView android:id="@+id/sensors_info_toggle"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/sensors_info"
+                  style="@style/SystemTitleTextView"/>
+
+
+        <TextView android:id="@+id/sensors_info"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:visibility="gone"
+                  android:padding="5dp"
+                  android:background="#FBFBFB"
+                  style="@style/HardwareInfoTextView"/>
+
+
+        <TextView android:id="@+id/camera_info_toggle"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/camera_info"
+                  style="@style/SystemTitleTextView"/>
+
+        <TextView android:id="@+id/camera_info"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:visibility="gone"
+                  android:padding="5dp"
+                  android:background="#FBFBFB"
+                  style="@style/HardwareInfoTextView"/>
+
+
+
+    </LinearLayout>
+
+
+</ScrollView>

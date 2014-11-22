@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Android Наблюдатель</string>
+    <string name="action_settings">О приложении</string>
+    <string name="cpu_info"><u>Процессор</u></string>
+
+    <string name="ram_info">ОЗУ</string>
+    <string name="internal_storage_info">Внутреннее хранилище</string>
+    <string name="clear_memory">Освободить ОЗУ</string>
+    <string name="delete_cache">Удалить кэш</string>
+    <string name="sensors_info"><u>Сенсоры</u></string>
+    <string name="camera_info"><u>Камера</u></string>
+    <string name="general_info"><u>Система</u></string>
+    <string name="display_info"><u>Экран</u></string>
+
+    <string name="memory_info_text">Память</string>
+    <string name="hardware_info_text">Оборудование</string>
+    <string name="processes_info_text">Работающие процессы</string>
+    <string name="apps_info_text">Установленные приложения</string>
+    <string name="about_app">О приложении</string>
+
+</resources>

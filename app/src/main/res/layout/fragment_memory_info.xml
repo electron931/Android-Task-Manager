@@ -94,7 +94,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/clear_memory"
-            style="@style/AccelerateButton"/>
+            style="@style/AccelerateButton"
+            />
 
         <Button android:id="@+id/clear_cache_button"
                 android:layout_width="match_parent"

@@ -63,7 +63,7 @@ public class CPUInfoFragment extends Fragment {
             ArcProgress arcProgress = (ArcProgress) getActivity()
                     .getLayoutInflater()
                     .inflate(R.layout.arcprogress_template, null);
-            arcProgress.setBottomText(getString(R.string.cpu_number, i + 1));
+            //arcProgress.setBottomText(getString(R.string.cpu_number, i + 1));
             arcProgress.setProgress(coreUsage);
 
             mArcProgressList.add(arcProgress);

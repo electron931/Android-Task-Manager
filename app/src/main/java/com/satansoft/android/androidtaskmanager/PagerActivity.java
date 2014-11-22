@@ -1,5 +1,7 @@
 package com.satansoft.android.androidtaskmanager;
 
+import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -8,9 +10,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import android.view.Menu;
+import android.view.MenuItem;
 
 
 public class PagerActivity extends FragmentActivity {
@@ -22,11 +23,9 @@ public class PagerActivity extends FragmentActivity {
                                     "ProcessListFragment",
                                     "AppsListFragment"};
 
+    private Resources mResources;
 
-    private static final String[] titles = { "Memory Info",
-                                             "Hardware Info",
-                                             "Running Processes",
-                                             "Installed Apps"};
+
 
     // When requested, this adapter returns a DemoObjectFragment,
     // representing an object in the collection.
@@ -37,19 +36,25 @@ public class PagerActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pager);
 
+        mResources = getResources();
+
         // ViewPager and its adapters use support library
         // fragments, so use getSupportFragmentManager.
         mDemoCollectionPagerAdapter =
                 new DemoCollectionPagerAdapter(
                         getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setOffscreenPageLimit(5);        //wrong!
+        mViewPager.setOffscreenPageLimit(5);                //wrong!
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
     }
 
 
     public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
 
+        private String[] titles = { mResources.getString(R.string.memory_info_text),
+                mResources.getString(R.string.hardware_info_text),
+                mResources.getString(R.string.processes_info_text),
+                mResources.getString(R.string.apps_info_text) };
 
         public DemoCollectionPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -79,4 +84,25 @@ public class PagerActivity extends FragmentActivity {
     }
 
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_action_about:
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return true;
+    }
 }

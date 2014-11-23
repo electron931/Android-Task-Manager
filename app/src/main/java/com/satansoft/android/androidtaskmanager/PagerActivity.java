@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -44,12 +43,12 @@ public class PagerActivity extends FragmentActivity {
                 new DemoCollectionPagerAdapter(
                         getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setOffscreenPageLimit(5);                //wrong!
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
     }
 
 
-    public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
+    public class DemoCollectionPagerAdapter extends FragmentPagerAdapter {
 
         private String[] titles = { mResources.getString(R.string.memory_info_text),
                 mResources.getString(R.string.hardware_info_text),

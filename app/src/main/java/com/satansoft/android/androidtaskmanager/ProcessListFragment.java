@@ -47,9 +47,9 @@ public class ProcessListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
 
-        updateProcessesInfo();
+        //updateProcessesInfo();
 
-        ((MyAdapter) getListAdapter()).notifyDataSetChanged();
+        //((MyAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
 
@@ -68,6 +68,7 @@ public class ProcessListFragment extends ListFragment {
         }
 
         mMemoryInfos = Arrays.asList(activityManager.getProcessMemoryInfo(pids));
+
     }
 
 

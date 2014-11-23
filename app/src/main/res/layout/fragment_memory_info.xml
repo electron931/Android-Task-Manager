@@ -13,35 +13,6 @@
         android:padding="10dp">
 
 
-        <!--<TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/cpu_info"
-            style="@style/SystemTitleTextView"/>-->
-
-
-        <!--<fragment
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:name="com.satansoft.android.androidtaskmanager.CPUInfoFragment"/>-->
-
-
-        <!--<TextView android:id="@+id/cpu_extended_info_toggle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColor="#33b5e5"
-            android:textSize="18sp"
-            android:text="@string/extended_cpu_info"/>-->
-
-        <!--<TextView android:id="@+id/cpu_extended_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:padding="5dp"
-            android:background="#FBFBFB"/>-->
-
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,7 +73,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/delete_cache"
                 style="@style/AccelerateButton"/>
-
 
 
     </LinearLayout>

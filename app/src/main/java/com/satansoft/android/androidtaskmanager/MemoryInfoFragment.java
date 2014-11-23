@@ -2,6 +2,8 @@ package com.satansoft.android.androidtaskmanager;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,11 +25,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 
 public class MemoryInfoFragment extends Fragment {
 
-    private static final String TAG = "StartFragment";
+    private static final String TAG = "MemoryInfoFragment";
 
     private boolean mIsExpanded;
 
@@ -49,6 +52,7 @@ public class MemoryInfoFragment extends Fragment {
     private ArcProgress mInternalMemoryUsageArcProgress;
 
     private Button mClearCacheButton;
+    private Button mClearMemoryButton;
 
 
     @Override
@@ -89,6 +93,14 @@ public class MemoryInfoFragment extends Fragment {
             }
         });
 
+        mClearMemoryButton = (Button) rootView.findViewById(R.id.clear_memory_button);
+        mClearMemoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearMemory();
+            }
+        });
+
 
         return rootView;
     }
@@ -115,7 +127,8 @@ public class MemoryInfoFragment extends Fragment {
                                     / (float) mTotalMemory) * 100 );
 
                             mMemoryUsageArcProgress.setProgress(memoryUsageInPercents);
-                            mMemoryUsageArcProgress.setBottomText(mMemoryUsage / 1024 + "MB / " + mTotalMemory / 1024 + "MB");
+                            mMemoryUsageArcProgress.setBottomText(mMemoryUsage / 1024 + "MB / " +
+                                    mTotalMemory / 1024 + "MB");
                         }
                     });
                 }
@@ -150,6 +163,10 @@ public class MemoryInfoFragment extends Fragment {
 
 
     private long getAvailableMemory() {
+        if (getActivity() == null) {
+            return 0;
+        }
+
         ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
 
         ActivityManager activityManager = (ActivityManager)
@@ -216,7 +233,6 @@ public class MemoryInfoFragment extends Fragment {
             if (m.getName().equals("freeStorage")) {
                 // Found the method I want to use
                 try {
-                    long desiredFreeStorage = 8 * 1024 * 1024 * 1024; // Request for 8GB of free space
                     m.invoke(pm, Long.MAX_VALUE , null);
                 } catch (Exception e) {
                     // Method invocation failed. Could be a permission problem
@@ -226,15 +242,41 @@ public class MemoryInfoFragment extends Fragment {
             }
         }
 
-        long oldAvailableInternalMemorySize = mAvailableInternalMemorySize;
-
         updateInternalMemoryInfo();
 
-        Toast.makeText(getActivity(), getString(R.string.cache_deleted_toast) + ": " +
-                (mAvailableInternalMemorySize - oldAvailableInternalMemorySize) / 1048576 + " MB",
+        Toast.makeText(getActivity(), getString(R.string.cache_deleted_toast),
                 Toast.LENGTH_SHORT).show();
 
         updateInternalMemoryArcProgress();
+    }
+
+
+
+    private void clearMemory() {
+        List<ApplicationInfo> packages;
+        PackageManager pm;
+        pm = getActivity().getPackageManager();
+        //get a list of installed apps.
+        packages = pm.getInstalledApplications(0);
+
+        ActivityManager mActivityManager = (ActivityManager) getActivity()
+                .getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ApplicationInfo packageInfo : packages) {
+            if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1)
+                continue;
+            if (packageInfo.packageName.equals("com.satansoft.android.androidtaskmanager"))
+                continue;
+            mActivityManager.killBackgroundProcesses(packageInfo.packageName);
+        }
+
+
+        System.runFinalization();
+        Runtime.getRuntime().gc();
+        System.gc();
+
+        Toast.makeText(getActivity(), getString(R.string.memory_released_toast),
+                Toast.LENGTH_SHORT).show();
     }
 
 

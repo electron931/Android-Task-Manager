@@ -19,6 +19,7 @@
     <string name="processes_info_text">Running Processes</string>
     <string name="apps_info_text">Installed Apps</string>
     <string name="about_app">About this app</string>
-    <string name="cache_deleted_toast">Deleted</string>
+    <string name="cache_deleted_toast">Cache deleted!</string>
+    <string name="memory_released_toast">Memory released!</string>
 
 </resources>

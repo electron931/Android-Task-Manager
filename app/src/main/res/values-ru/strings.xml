@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Android Наблюдатель</string>
+    <string name="app_name">Android Observer</string>
     <string name="action_settings">О приложении</string>
     <string name="cpu_info"><u>Процессор</u></string>
 
@@ -19,6 +19,7 @@
     <string name="processes_info_text">Работающие процессы</string>
     <string name="apps_info_text">Установленные приложения</string>
     <string name="about_app">О приложении</string>
-    <string name="cache_deleted_toast">Удалено</string>
+    <string name="cache_deleted_toast">Кэш удален!</string>
+    <string name="memory_released_toast">Память очищена!</string>
 
 </resources>
